@@ -2742,8 +2742,11 @@ export default function HomePage() {
           setCurrentTab('all');
         }
         // 加载持仓数据
-        const migratedDca = migrateDcaPlansToScoped(isPlainObject(dcaPlans) ? dcaPlans : {});
-        if (JSON.stringify(migratedDca) !== JSON.stringify(dcaPlans)) {
+        // 本地补丁：这里要用刚由 initDcaPlans() 读进来的最新值。原来用的是渲染时的旧闭包值（空对象），
+        // 会把本地已有的定投计划覆盖成空，重启后定投计划全部丢失。
+        const freshDca = useStorageStore.getState().dcaPlans;
+        const migratedDca = migrateDcaPlansToScoped(isPlainObject(freshDca) ? freshDca : {});
+        if (JSON.stringify(migratedDca) !== JSON.stringify(freshDca)) {
           setDcaPlans(migratedDca);
         }
         const savedTheme = storageStore.getItem('theme');
@@ -5111,6 +5114,7 @@ export default function HomePage() {
                       <SummaryTabContent
                         funds={displayFunds}
                         holdings={holdingsForTabWithLinked}
+                        transactions={transactions}
                         groups={groups}
                         getProfit={getHoldingProfitForTab}
                         summaryTabPortfolioTotals={summaryTabPortfolioTotals}

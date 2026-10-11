@@ -3,11 +3,13 @@
 import React from 'react';
 import GroupSummary from './GroupSummary';
 import GroupAccountSummaryCard from './GroupAccountSummaryCard';
+import AssetCurveCard from './AssetCurveCard';
 import { SUMMARY_TAB_ID, SUMMARY_SOURCE_GLOBAL } from '@/app/constants';
 
 export default function SummaryTabContent({
   funds,
   holdings,
+  transactions,
   groups,
   getProfit,
   summaryTabPortfolioTotals,
@@ -40,6 +42,7 @@ export default function SummaryTabContent({
         shouldShowMarketIndex={shouldShowMarketIndex}
         navbarHeight={navbarHeight}
       />
+      <AssetCurveCard funds={funds} holdings={holdings} transactions={transactions} masked={maskAmounts} />
       {summaryCardItems.length > 0 && (
         <div
           className="grid"
